@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
 import './App.css';
 
 function App() {
+  // State to track if user is authenticated
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check authentication status on component mount
+  useEffect(() => {
+    const checkAuth = () => {
+      const user = localStorage.getItem('user');
+      setIsAuthenticated(!!user);
+    };
+
+    // Check auth status initially
+    checkAuth();
+
+    // Set up event listener for storage changes (logout from other tabs)
+    window.addEventListener('storage', checkAuth);
+
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      {isAuthenticated ? <Dashboard /> : <LoginPage />}
     </div>
   );
 }
