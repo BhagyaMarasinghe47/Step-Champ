@@ -1,183 +1,175 @@
+/*Loginpage.css*/
+
+
 .login-container {
-    display: flex;
-    height: 100vh;
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(to right, #ffffff 60%, #e6ffe6 40%);
+}
+
+.login-left {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-champ-logo {
+  width: 250px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.brand-text {
+  text-align: center;
+}
+
+.brand-text h1 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #262626;
+  margin: 0;
+}
+
+.brand-highlight {
+  color: #27c34b;
+}
+
+.brand-text p {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+}
+
+.login-right {
+  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #a6ffb6, #48d861);
+  position: relative;
+}
+
+.login-box {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  width: 80%;
+  max-width: 400px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-box h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.login-subtitle {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.google-signin-container {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.social-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.social-login-button:hover {
+  background-color: #f7f7f7;
+}
+
+.social-login-button span {
+  margin-left: 10px;
+}
+
+.button-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+.google-icon {
+  background-color: #4285F4;
+  color: white;
+}
+
+.microsoft-icon {
+  background-color: #00a4ef;
+  color: white;
+}
+
+.login-footer {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.geveo-logo {
+  width: 100px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.version-text {
+  font-size: 12px;
+  color: #888;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    background: linear-gradient(to bottom, #ffffff 60%, #e6ffe6 40%);
+  }
+  
+  .login-left, .login-right {
     width: 100%;
-    background: linear-gradient(to right, #ffffff 60%, #e6ffe6 40%);
   }
   
   .login-left {
-    width: 60%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 2rem;
-  }
-  
-  .logo-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .step-champ-logo {
-    width: 250px;
-    height: auto;
-    margin-bottom: 15px;
-  }
-  
-  .brand-text {
-    text-align: center;
-  }
-  
-  .brand-text h1 {
-    font-size: 32px;
-    font-weight: bold;
-    color: #262626;
-    margin: 0;
-  }
-  
-  .brand-text p {
-    font-size: 18px;
-    color: #333;
-    margin: 0;
+    height: 40%;
   }
   
   .login-right {
-    width: 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #a6ffb6, #48d861);
-    position: relative;
+    height: 60%;
   }
-  
-  .login-box {
-    background-color: white;
-    border-radius: 10px;
-    padding: 30px;
-    width: 80%;
-    max-width: 400px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .login-box h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 25px;
-    color: #333;
-  }
-  
-  .login-form {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    font-size: 14px;
-    background-color: #f9f9f9;
-    transition: border-color 0.3s;
-  }
-  
-  .form-input:focus {
-    border-color: #48d861;
-    outline: none;
-  }
-  
-  .form-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    font-size: 14px;
-  }
-  
-  .remember-me {
-    display: flex;
-    align-items: center;
-  }
-  
-  .remember-me input {
-    margin-right: 5px;
-  }
-  
-  .forgot-password {
-    color: #666;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  
-  .forgot-password:hover {
-    color: #48d861;
-  }
-  
-  .sign-in-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 25px;
-    background: linear-gradient(to right, #6a3de8, #563cc9);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .sign-in-button:hover {
-    background: linear-gradient(to right, #5a33c8, #4930a8);
-  }
-  
-  .error-message {
-    background-color: #ffeeee;
-    color: #d32f2f;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    font-size: 14px;
-  }
-  
-  .login-footer {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .geveo-logo {
-    width: 100px;
-    height: auto;
-    margin-bottom: 5px;
-  }
-  
-  .version-text {
-    font-size: 12px;
-    color: #888;
-    margin: 0;
-  }
-  
-  @media (max-width: 768px) {
-    .login-container {
-      flex-direction: column;
-      background: linear-gradient(to bottom, #ffffff 60%, #e6ffe6 40%);
-    }
-    
-    .login-left, .login-right {
-      width: 100%;
-    }
-    
-    .login-left {
-      height: 40%;
-    }
-    
-    .login-right {
-      height: 60%;
-    }
-  }
+}
