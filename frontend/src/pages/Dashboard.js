@@ -3,6 +3,11 @@
 import React, { useState } from 'react';
 import './Dashboard.css';
 import stepChampLogo from '../assets/images/step-champ-logo.png';
+import { Link } from 'react-router-dom';
+
+
+
+
 
 const Dashboard = () => {
   const user = JSON.parse(localStorage.getItem('user')) || {
@@ -54,13 +59,11 @@ const Dashboard = () => {
             <span className="menu-text">Home</span>
           </button>
           
-          <button 
-            className={`menu-item ${activeMenuItem === 'Challenges' ? 'active' : ''}`}
-            onClick={() => handleMenuClick('Challenges')}
-          >
-            <span className="menu-icon">🏆</span>
-            <span className="menu-text">Challenges</span>
-          </button>
+          <Link to="/challenges" className={`menu-item ${activeMenuItem === 'Challenges' ? 'active' : ''}`}>
+              <span className="menu-icon">🏆</span>
+              <span className="menu-text">Challenges</span>
+          </Link>
+
           
           <button 
             className={`menu-item ${showSettingsSubmenu ? 'active-parent' : ''}`}
