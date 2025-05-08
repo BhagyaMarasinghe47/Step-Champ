@@ -1,43 +1,103 @@
-import React, { useState } from 'react';
+/*Loginpage.js*/
+
+import React, { useEffect } from 'react';
 import './LoginPage.css';
 import stepChampLogo from '../assets/images/step-champ-logo.png';
 import geveoLogo from '../assets/images/geveo-logo.png';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
+  // Function to initialize Google Sign-In API
+  useEffect(() => {
+    // Load the Google Sign-In API script
+    const loadGoogleScript = () => {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+      
+      script.onload = () => {
+        initializeGoogleSignIn();
+      };
+    };
 
-  const handleSignIn = (e) => {
-    e.preventDefault();
+    // Initialize Google Sign-In button
+    const initializeGoogleSignIn = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: 'YOUR_GOOGLE_CLIENT_ID', // Replace with your actual Google Client ID
+          callback: handleGoogleSignIn,
+          auto_select: false,
+        });
+
+        window.google.accounts.id.renderButton(
+          document.getElementById('google-signin-button'),
+          { 
+            theme: 'outline', 
+            size: 'large',
+            width: '100%',
+            text: 'signin_with',
+            shape: 'rectangular',
+          }
+        );
+      }
+    };
+
+    loadGoogleScript();
     
-    // Basic validation
-    if (!username || !password) {
-      setError('Please enter both username and password');
-      return;
-    }
-    
-    // Mock authentication - in a real app, this would call an API
-    // For demo purposes, we'll accept any non-empty username/password
-    if (username && password) {
+    return () => {
+      // Clean up if needed
+      const scriptElement = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+      if (scriptElement) {
+        document.body.removeChild(scriptElement);
+      }
+    };
+  }, []);
+
+  // Handle Google Sign-In response
+  const handleGoogleSignIn = (response) => {
+    // This function is called when the user successfully signs in with Google
+    if (response && response.credential) {
+      // For a real implementation, you would:
+      // 1. Send the ID token to your server
+      // 2. Verify the token on the server-side
+      // 3. Create a session for the user
+      
+      // For demo purposes, we're just saving to localStorage
+      const userData = parseJwt(response.credential);
+      
       const user = {
-        id: '123',
-        name: 'test10 member',
-        email: username,
+        id: userData.sub,
+        name: userData.name || 'test10 member',
+        email: userData.email || 'stepchampuser10@outlook.com',
+        picture: userData.picture,
+        provider: 'google',
       };
       
       localStorage.setItem('user', JSON.stringify(user));
-      
-      // Force page refresh to show dashboard
       window.location.reload();
-    } else {
-      setError('Invalid username or password');
     }
   };
 
-  const handleForgotPassword = () => {
-    alert('Password reset functionality will be implemented soon.');
+  // Helper function to decode JWT token
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
+  // Simulated sign-in for testing
+  const handleSimulatedSignIn = () => {
+    const user = {
+      id: 'test-user-123',
+      name: 'test10 member',
+      email: 'stepchampuser10@outlook.com',
+      provider: 'google',
+    };
+    localStorage.setItem('user', JSON.stringify(user));
+    window.location.reload();
   };
 
   return (
@@ -52,49 +112,21 @@ const LoginPage = () => {
       <div className="login-right">
         <div className="login-box">
           <h2>Sign In</h2>
+          <p className="login-subtitle">Sign in to stay connected</p>
           
-          <form onSubmit={handleSignIn} className="login-form">
-            {error && <div className="error-message">{error}</div>}
+          <div className="login-options">
+            {/* Google Sign-In Button - Will be replaced by Google's button */}
+            <div id="google-signin-button" className="google-signin-container"></div>
             
-            <div className="form-group">
-              <input
-                type="text"
-                placeholder="Username or email"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="form-input"
-              />
-            </div>
-            
-            <div className="form-group">
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-input"
-              />
-            </div>
-            
-            <div className="form-options">
-              <div className="remember-me">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                />
-                <label htmlFor="remember">Remember me</label>
-              </div>
-              <div className="forgot-password">
-                <span onClick={handleForgotPassword}>Forgot password?</span>
-              </div>
-            </div>
-            
-            <button type="submit" className="sign-in-button">
-              Sign In
+            {/* Fallback button for testing */}
+            <button 
+              className="social-login-button google-button"
+              onClick={handleSimulatedSignIn}
+            >
+              <span className="button-icon google-icon">G</span>
+              <span>Test Sign-in (Simulated)</span>
             </button>
-          </form>
+          </div>
           
           <div className="login-footer">
             <img src={geveoLogo} alt="Geveo Logo" className="geveo-logo" />
