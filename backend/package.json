@@ -1,11 +1,11 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "startup.js",
+  "description": "Backend for StepChamp application",
+  "main": "server.js",
   "scripts": {
-    "start": "node startup.js",
-    "dev": "nodemon startup.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
