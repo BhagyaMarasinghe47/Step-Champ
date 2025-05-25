@@ -1,8 +1,8 @@
-// ChallengesPage.js
+/*Challengespage.js*/
+
 import React from 'react';
 import './ChallengesPage.css';
-import { FaRunning } from 'react-icons/fa'; // Install this icon pack if not used yet: npm install react-icons
-
+import { FaRunning } from 'react-icons/fa';
 
 const ChallengesPage = () => {
   const challenges = [

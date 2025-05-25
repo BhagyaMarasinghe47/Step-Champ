@@ -2,8 +2,8 @@
 
 import React, { useEffect } from 'react';
 import './LoginPage.css';
-import stepChampLogo from '../assets/images/step-champ-logo.png';
-import geveoLogo from '../assets/images/geveo-logo.png';
+import stepChampLogo from '../../assets/images/step-champ-logo.png';
+import geveoLogo from '../../assets/images/geveo-logo.png';
 
 const LoginPage = () => {
   // Function to initialize Google Sign-In API

@@ -1,11 +1,12 @@
-// App.js
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // මෙක ඇතුලත් කරන්න
-import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
-import ChallengesPage from './pages/ChallengesPage';
-import './App.css';
+/* App.js*/
 
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/Login/LoginPage';
+import Dashboard from './pages/Dashboard/Dashboard';
+import ChallengesPage from './pages/Challenges/ChallengesPage';
+
+import './App.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -28,22 +29,21 @@ function App() {
   if (isLoading) return <div className="loading">Loading...</div>;
 
   return (
-      <Router>
-        <div className="app">
-          <Routes>
-            {isAuthenticated ? (
-              <>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/challenges" element={<ChallengesPage />} />
-              </>
-            ) : (
-              <Route path="*" element={<LoginPage />} />
-            )}
-          </Routes>
-        </div>
-      </Router>
-    );
-    
+    <Router>
+      <div className="app">
+        <Routes>
+          {isAuthenticated ? (
+            <>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/challenges" element={<ChallengesPage />} />
+            </>
+          ) : (
+            <Route path="*" element={<LoginPage />} />
+          )}
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;

@@ -1,0 +1,113 @@
+
+/*Sidebar.css*/
+
+
+.sidebar {
+    width: 220px;
+    background-color: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    padding: 0 15px 20px;
+  }
+  
+  .logo {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+  }
+  
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: #333;
+    position: relative;
+  }
+  
+  .menu-item:hover {
+    background-color: #f0f9f0;
+  }
+  
+  .menu-item.active {
+    background-color: #27c34b;
+    color: white;
+  }
+  
+  .menu-item.active-parent {
+    background-color: #e6f7ea;
+    color: #27c34b;
+    border-left: 4px solid #27c34b;
+  }
+  
+  .menu-icon {
+    margin-right: 12px;
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+  }
+  
+  .menu-text {
+    font-size: 14px;
+    flex: 1;
+  }
+  
+  .submenu-arrow {
+    margin-left: auto;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .submenu-arrow.open {
+    transform: rotate(180deg);
+  }
+  
+  .submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  
+  .submenu.show {
+    max-height: 500px; /* Adjust this value if needed */
+  }
+  
+  .submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px 12px 35px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: #666;
+    width: 100%;
+  }
+  
+  .submenu-item:hover {
+    background-color: #f0f9f0;
+  }
+  
+  .submenu-item.active {
+    background-color: rgba(39, 195, 75, 0.1);
+    color: #27c34b;
+    border-left: 4px solid #27c34b;
+  } 
