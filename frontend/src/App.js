@@ -3,9 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
 import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
 import ChallengesPage from './pages/ChallengesPage';
-import './App.css';
 import { AuthProvider } from './contexts/AuthContext';
 
 // Pages
@@ -13,6 +11,8 @@ import Login from './pages/Login';
 import Users from './pages/Users';
 import Settings from './pages/Setting';
 import NotFound from './pages/NotFound';
+import Dashboard from './pages/Dashboard';
+
 
 const App = () => {
   return (

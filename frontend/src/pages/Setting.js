@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import MainLayout from '../components/layout/MainLayout';
 import AuthService from '../services/auth.service';
+import { toast } from 'react-toastify';
 import { FaUser, FaKey } from 'react-icons/fa';
 
 const Settings = () => {
