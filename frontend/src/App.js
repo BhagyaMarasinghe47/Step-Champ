@@ -1,5 +1,11 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// App.js
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
+import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
+import ChallengesPage from './pages/ChallengesPage';
+import './App.css';
 import { AuthProvider } from './contexts/AuthContext';
 
 // Pages
