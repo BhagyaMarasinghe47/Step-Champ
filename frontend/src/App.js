@@ -1,49 +1,31 @@
-/* App.js*/
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/Login/LoginPage';
-import Dashboard from './pages/Dashboard/Dashboard';
-import ChallengesPage from './pages/Challenges/ChallengesPage';
+import { AuthProvider } from './contexts/AuthContext';
 
-import './App.css';
+// Pages
+import Login from './pages/Login';
+import Users from './pages/Users';
+import Settings from './pages/Setting';
+import NotFound from './pages/NotFound';
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    checkAuthStatus();
-    window.addEventListener('storage', checkAuthStatus);
-    return () => {
-      window.removeEventListener('storage', checkAuthStatus);
-    };
-  }, []);
-
-  const checkAuthStatus = () => {
-    const user = localStorage.getItem('user');
-    setIsAuthenticated(user !== null);
-    setIsLoading(false);
-  };
-
-  if (isLoading) return <div className="loading">Loading...</div>;
-
+const App = () => {
   return (
-    <Router>
-      <div className="app">
+    <AuthProvider>
+      <Router>
         <Routes>
-          {isAuthenticated ? (
-            <>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/challenges" element={<ChallengesPage />} />
-            </>
-          ) : (
-            <Route path="*" element={<LoginPage />} />
-          )}
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/challenges" element={<Challenges />} />
+          <Route path="/settings/:section" element={<Settings />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/activity-logs" element={<ActivityLogs />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+      <ToastContainer position="top-right" autoClose={3000} />
+    </AuthProvider>
   );
-}
+};
 
 export default App;

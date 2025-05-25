@@ -1,231 +1,258 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './Dashboard.css';
-import stepChampLogo from '../assets/images/step-champ-logo.png';
-import ManageUsers from './ManageUsers'; // Import the ManageUsers component
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import MainLayout from '../components/layout/MainLayout';
+import { FaUsers, FaTrophy, FaRunning, FaUserFriends } from 'react-icons/fa';
+import DashboardService from '../services/dashboard.service';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
+// Register ChartJS components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-
-
-
-const Dashboard = () => {
-  const user = JSON.parse(localStorage.getItem('user')) || {
-    name: 'test10 member',
-    email: 'stepchampuser10@outlook.com'
-  };
-
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeMenuItem, setActiveMenuItem] = useState('Home');
-  const [showSettingsSubmenu, setShowSettingsSubmenu] = useState(false);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    window.location.reload();
-  };
-  
-  const profileMenuRef = useRef(null);
-  
-  const toggleProfileMenu = () => {
-    setShowProfileMenu(!showProfileMenu);
-  };
-  
-  // Close profile dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
-        setShowProfileMenu(false);
-      }
-    }
-    
-    // Attach the event listener
-    document.addEventListener('mousedown', handleClickOutside);
-    
-    // Clean up
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleMenuClick = (menuItem) => {
-    if (menuItem === 'Settings') {
-      setShowSettingsSubmenu(!showSettingsSubmenu);
-    } else {
-      setActiveMenuItem(menuItem);
-    }
-  };
-
-  const handleSubmenuClick = (menuItem) => {
-    setActiveMenuItem(menuItem);
-    // Keep submenu open when a submenu item is clicked
-  };
-
-  // Render the appropriate content based on activeMenuItem
-  const renderContent = () => {
-    switch(activeMenuItem) {
-      case 'Manage Users':
-        return <ManageUsers />;
-      case 'Home':
-        return (
-          <div className="page-content">
-            <h1>Welcome Home</h1>
-            
-            <div className="user-info">
-              <p><strong>Name:</strong> {user.name}</p>
-              <p><strong>Email Address:</strong> {user.email}</p>
-            </div>
-            
-            <div className="action-buttons">
-              <button className="primary-btn" onClick={() => handleMenuClick('Challenges')}>
-                Show Challenges
-              </button>
-            </div>
-          </div>
-        );
-      case 'Challenges':
-        return (
-          <div className="page-content">
-            <h1>Challenges</h1>
-            <p>Your challenges will appear here.</p>
-          </div>
-        );
-      case 'Account':
-        return (
-          <div className="page-content">
-            <h1>Account Settings</h1>
-            <p>Manage your account settings here.</p>
-          </div>
-        );
-      case 'Activity Logs':
-        return (
-          <div className="page-content">
-            <h1>Activity Logs</h1>
-            <p>View your activity logs here.</p>
-          </div>
-        );
-      default:
-        return (
-          <div className="page-content">
-            <h1>Page Not Found</h1>
-            <p>The page you're looking for doesn't exist.</p>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div className="dashboard-container">
-      {/* Sidebar */}
-      <div className="sidebar">
-        <div className="logo-container">
-          <img src={stepChampLogo} alt="Step Champ Logo" className="logo" />
-        </div>
-        
-        <nav className="sidebar-menu">
-          <button 
-            className={`menu-item ${activeMenuItem === 'Home' ? 'active' : ''}`}
-            onClick={() => handleMenuClick('Home')}
-          >
-            <span className="menu-icon">🏠</span>
-            <span className="menu-text">Home</span>
-          </button>
-          
-          <Link to="/challenges" className={`menu-item ${activeMenuItem === 'Challenges' ? 'active' : ''}`}>
-              <span className="menu-icon">🏆</span>
-              <span className="menu-text">Challenges</span>
-          </Link>
-
-          
-          <button 
-            className={`menu-item ${showSettingsSubmenu ? 'active-parent' : ''}`}
-            onClick={() => handleMenuClick('Settings')}
-          >
-            <span className="menu-icon">⚙️</span>
-            <span className="menu-text">Settings</span>
-            <span className={`submenu-arrow ${showSettingsSubmenu ? 'open' : ''}`}>▼</span>
-          </button>
-          
-          {/* Settings submenu */}
-          <div className={`submenu ${showSettingsSubmenu ? 'show' : ''}`}>
-            <button 
-              className={`submenu-item ${activeMenuItem === 'Account' ? 'active' : ''}`}
-              onClick={() => handleSubmenuClick('Account')}
-            >
-              <span className="menu-icon">➡️</span>
-              <span className="menu-text">Account</span>
-            </button>
-            
-            <button 
-              className={`submenu-item ${activeMenuItem === 'Manage Users' ? 'active' : ''}`}
-              onClick={() => handleSubmenuClick('Manage Users')}
-            >
-              <span className="menu-icon">➡️</span>
-              <span className="menu-text">Manage Users</span>
-            </button>
-            
-            <button 
-              className={`submenu-item ${activeMenuItem === 'Activity Logs' ? 'active' : ''}`}
-              onClick={() => handleSubmenuClick('Activity Logs')}
-            >
-              <span className="menu-icon">➡️</span>
-              <span className="menu-text">Activity Logs</span>
-            </button>
-          </div>
-        </nav>
+const StatCard = ({ title, value, icon, color }) => (
+  <div className="bg-white rounded-lg shadow p-6">
+    <div className="flex items-center">
+      <div className={`rounded-full p-3 ${color} text-white mr-4`}>
+        {icon}
       </div>
-
-      {/* Main Content */}
-      <div className="main-content">
-        {/* Header */}
-        <header className="dashboard-header">
-          <div className="search-bar">
-            <input 
-              type="text" 
-              placeholder="Search" 
-              value={searchQuery}
-              onChange={handleSearch}
-            />
-          </div>
-          <div className="header-actions">
-            <button className="notification-btn">🔔</button>
-            <div className="profile-menu-container" ref={profileMenuRef}>
-              <button className="profile-btn" onClick={toggleProfileMenu}>👤</button>
-              {showProfileMenu && (
-                <div className="profile-dropdown">
-                  <div className="profile-info">
-                    <div className="profile-name">{user.name}</div>
-                    <div className="profile-email">{user.email}</div>
-                  </div>
-                  <div className="dropdown-divider"></div>
-                  <button className="logout-btn" onClick={handleLogout}>
-                    <span className="logout-icon">🚪</span>
-                    <span>Logout</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
-
-        {/* Render content based on active menu item */}
-        {renderContent()}
-
-        {/* Footer */}
-        <footer className="dashboard-footer">
-          <div className="footer-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Use</a>
-          </div>
-          <div className="footer-copyright">
-            @2025 Powered by EVERNOTE, Made with ❤️ by GEVEO
-          </div>
-        </footer>
+      <div>
+        <h3 className="text-gray-500 text-sm">{title}</h3>
+        <p className="text-2xl font-bold">{value}</p>
       </div>
     </div>
+  </div>
+);
+
+const ActivityItem = ({ activity }) => (
+  <div className="border-b border-gray-100 py-3">
+    <div className="flex items-center">
+      <div className={`w-2 h-2 rounded-full mr-3 ${
+        activity.type === 'INFO' ? 'bg-blue-500' : 
+        activity.type === 'WARNING' ? 'bg-yellow-500' : 
+        activity.type === 'ERROR' ? 'bg-red-500' : 
+        'bg-green-500'
+      }`}></div>
+      <div className="flex-1">
+        <p className="text-sm">{activity.message}</p>
+        <div className="flex justify-between mt-1">
+          <span className="text-xs text-gray-500">{activity.user_name}</span>
+          <span className="text-xs text-gray-500">{activity.created}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const Dashboard = () => {
+  const [stats, setStats] = useState({
+    userCount: 0,
+    challengeCount: 0,
+    ongoingChallenges: 0,
+    teamCount: 0,
+    recentActivity: [],
+    upcomingChallenges: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const response = await DashboardService.getStats();
+        if (response.success) {
+          setStats(response.data);
+        }
+      } catch (err) {
+        console.error('Error fetching dashboard stats:', err);
+        setError('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchDashboardData();
+  }, []);
+  
+  // Chart data
+  const chartData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [
+      {
+        label: 'Active Users',
+        data: [65, 75, 70, 80, 75, 88],
+        borderColor: '#10B981',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        tension: 0.4
+      }
+    ]
+  };
+  
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'User Activity Trend'
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  };
+  
+  if (loading) {
+    return (
+      <MainLayout>
+        <div className="flex items-center justify-center h-full">
+          <div className="spinner animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </MainLayout>
+    );
+  }
+  
+  return (
+    <MainLayout>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+      </div>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+          {error}
+        </div>
+      )}
+      
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <StatCard 
+          title="Total Users" 
+          value={stats.userCount} 
+          icon={<FaUsers size={20} />} 
+          color="bg-primary"
+        />
+        <StatCard 
+          title="Total Challenges" 
+          value={stats.challengeCount} 
+          icon={<FaTrophy size={20} />} 
+          color="bg-yellow-500"
+        />
+        <StatCard 
+          title="Ongoing Challenges" 
+          value={stats.ongoingChallenges} 
+          icon={<FaRunning size={20} />} 
+          color="bg-blue-500"
+        />
+        <StatCard 
+          title="Teams" 
+          value={stats.teamCount} 
+          icon={<FaUserFriends size={20} />} 
+          color="bg-purple-500"
+        />
+      </div>
+      
+      {/* Chart and Activity Logs */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
+          <h2 className="text-lg font-medium mb-4">User Activity</h2>
+          <Line data={chartData} options={chartOptions} />
+        </div>
+        
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-lg font-medium mb-4">Recent Activity</h2>
+          {stats.recentActivity && stats.recentActivity.length > 0 ? (
+            <div className="space-y-0">
+              {stats.recentActivity.map((activity, index) => (
+                <ActivityItem key={index} activity={activity} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center py-4">No recent activity</p>
+          )}
+          <div className="mt-4 text-center">
+            <a href="/activity-logs" className="text-primary hover:underline text-sm">
+              View All Activity
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      {/* Upcoming Challenges */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-medium mb-4">Upcoming Challenges</h2>
+        {stats.upcomingChallenges && stats.upcomingChallenges.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Challenge Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Start Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {stats.upcomingChallenges.map((challenge) => (
+                  <tr key={challenge.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {challenge.name}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {challenge.start_date}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <a 
+                        href={`/challenges`} 
+                        className="text-primary hover:underline"
+                      >
+                        View Details
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-gray-500 text-center py-4">No upcoming challenges</p>
+        )}
+        <div className="mt-4 text-center">
+          <a href="/challenges" className="text-primary hover:underline text-sm">
+            View All Challenges
+          </a>
+        </div>
+      </div>
+    </MainLayout>
   );
 };
 
