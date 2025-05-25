@@ -1,6 +1,6 @@
 // App.js
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // මෙක ඇතුලත් කරන්න
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import ChallengesPage from './pages/ChallengesPage';
