@@ -1,66 +1,52 @@
-// src/services/authService.js
+import axiosInstance from '../utils/axios';
 
-// Function to handle Google authentication
-export const signInWithGoogle = async () => {
-  try {
-    // This is a placeholder for actual Google OAuth implementation
-    // In a real app, you'd use the Google OAuth API or Firebase Auth
-    
-    // Simulating successful login for demo purposes
-    const mockUser = {
-      id: 'google-user-123',
-      name: 'Google User',
-      email: 'user@gmail.com',
-      provider: 'google',
-      token: 'mock-token-123',
-    };
-    
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    return mockUser;
-  } catch (error) {
-    console.error('Google sign-in error:', error);
-    throw error;
+const AuthService = {
+  login: async (email, password) => {
+    const response = await axiosInstance.post('/auth/login', { email, password });
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.data));
+    }
+    return response.data;
+  },
+  
+  logout: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  },
+  
+  getCurrentUser: () => {
+    return JSON.parse(localStorage.getItem('user'));
+  },
+  
+  isAuthenticated: () => {
+    return !!localStorage.getItem('token');
+  },
+  
+  getProfile: async () => {
+    const response = await axiosInstance.get('/auth/me');
+    return response.data;
+  },
+  
+  changePassword: async (currentPassword, newPassword) => {
+    const response = await axiosInstance.put('/auth/changepassword', {
+      currentPassword,
+      newPassword
+    });
+    return response.data;
+  },
+  
+  updateProfile: async (userData) => {
+    const response = await axiosInstance.put('/admins/profile', userData);
+    if (response.data.success) {
+      // Update local storage
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      const updatedUser = { ...currentUser, ...response.data.data };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+    return response.data;
   }
 };
 
-// Function to handle Microsoft authentication
-export const signInWithMicrosoft = async () => {
-  try {
-    // This is a placeholder for actual Microsoft OAuth implementation
-    // In a real app, you'd use the Microsoft Authentication Library (MSAL)
-    
-    // Simulating successful login for demo purposes
-    const mockUser = {
-      id: 'microsoft-user-123',
-      name: 'Microsoft User',
-      email: 'user@outlook.com',
-      provider: 'microsoft',
-      token: 'mock-token-456',
-    };
-    
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    return mockUser;
-  } catch (error) {
-    console.error('Microsoft sign-in error:', error);
-    throw error;
-  }
-};
-
-// Logout function
-export const logout = () => {
-  localStorage.removeItem('user');
-};
-
-// Check if user is authenticated
-export const isAuthenticated = () => {
-  return localStorage.getItem('user') !== null;
-};
-
-// Get current user
-export const getCurrentUser = () => {
-  const userStr = localStorage.getItem('user');
-  if (userStr) {
-    return JSON.parse(userStr);
-  }
-  return null;
-};
+export default AuthService;
